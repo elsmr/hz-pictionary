@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "grommet": "^1.2.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
@@ -12,6 +13,8 @@
     "babel-eslint": "7.1.1",
     "babel-jest": "19.0.0",
     "babel-loader": "6.4.0",
+    "babel-preset-es2017": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
     "babel-preset-react-app": "^2.2.0",
     "babel-runtime": "^6.20.0",
     "case-sensitive-paths-webpack-plugin": "1.1.4",
@@ -22,9 +25,8 @@
     "detect-port": "1.1.0",
     "dotenv": "4.0.0",
     "eslint": "3.17.1",
-    "eslint-config-react-app": "^0.6.2",
+    "eslint-config-airbnb": "^14.1.0",
     "eslint-loader": "1.6.3",
-    "eslint-plugin-flowtype": "2.30.3",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.10.0",
@@ -51,7 +53,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "": ""
   },
   "jest": {
     "collectCoverageFrom": [
@@ -76,13 +79,5 @@
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     }
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }
