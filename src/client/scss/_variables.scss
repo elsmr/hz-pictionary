@@ -1,0 +1,71 @@
+$brand-font-family: -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    Oxygen,
+                    Ubuntu,
+                    Cantarell,
+                    "Fira Sans",
+                    "Droid Sans",
+                    "Helvetica Neue",
+                    sans-serif;
+$brand-large-number-font-family: $brand-font-family;
+$special-font-family: 'Gloria Hallelujah';
+$brand-color: #7DC19B;
+$brand-color-lighter: desaturate(lighten($brand-color, 55%), 40%);
+$brand-neutral-colors: (#425563, #5F7A76, #80746E, #767676) !default;
+$brand-accent-colors: ($brand-color, #614767, #ff8d6d) !default;
+$brand-status-colors: (
+  critical: #F04953,
+  error: #F04953,
+  warning: #FFD144,
+  ok: $brand-color,
+  unknown: #CCCCCC,
+  disabled: #CCCCCC
+);
+$brand-link-color: inherit;
+$link-hover-color: #000;
+$brand-link-text-decoration: underline;
+$brand-grey-colors: (#000001, #333333, #3B3B3B, #434343, #666666);
+$brand-graph-colors: $brand-neutral-colors;
+$text-color: rgb(60, 72, 89);
+$colored-text-color: rgb(60, 72, 89);
+$button-text-color: $text-color;
+$active-colored-text-color: $text-color;
+$accent-color: #fff;
+
+// $hpe-fonts-path: "https://hpefonts.s3.amazonaws.com/web" !default;
+
+// @font-face {
+//   font-family: "Metric";
+//   src: url("#{$hpe-fonts-path}/MetricHPE-Web-Regular.woff") format('woff');
+// }
+
+// @font-face {
+//   font-family: "Metric";
+//   src: url("#{$hpe-fonts-path}/MetricHPE-Web-Bold.woff") format('woff');
+//   font-weight: 700;
+// }
+
+// @font-face {
+//   font-family: "Metric";
+//   src: url("#{$hpe-fonts-path}/MetricHPE-Web-Semibold.woff") format('woff');
+//   font-weight: 600;
+// }
+
+// @font-face {
+//   font-family: "Metric";
+//   src: url("#{$hpe-fonts-path}/MetricHPE-Web-Light.woff") format('woff');
+//   font-weight: 100;
+// }
+
+// $text-font-weight: 100;
+// $text-strong-font-weight: 600;
+
+$button-accent-color: #B6EF8B;
+$control-brand-color: #B6EF8B;
+$h1-font-size: 81px;
+$h1-line-height: 1.4;
+$h1-palm-font-size: 48px;
+
+// $border-radius: 0px;

@@ -8,6 +8,7 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
+var path = require('path');
 
 
 
@@ -81,7 +82,7 @@ module.exports = {
       'react-native': 'react-native-web'
     }
   },
-  
+
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
@@ -127,7 +128,7 @@ module.exports = {
         include: paths.appSrc,
         loader: 'babel',
         query: {
-          
+
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
@@ -141,7 +142,17 @@ module.exports = {
       // in development "style" loader enables hot editing of CSS.
       {
         test: /\.scss$/,
-        loader: 'style!css?importLoaders=1!sass!postcss'
+        loader: 'style!css?importLoaders=1!sass?outputStyle=expanded&' +
+            'includePaths[]=' +
+            (encodeURIComponent(
+              path.resolve(process.cwd(), './node_modules')
+            )) +
+            '&includePaths[]=' +
+            (encodeURIComponent(
+                path.resolve( process.cwd(),
+                  './node_modules/grommet/node_modules'))
+            )
+            + '!postcss'
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
@@ -161,7 +172,7 @@ module.exports = {
       // Remember to add the new extension(s) to the "url" loader exclusion list.
     ]
   },
-  
+
   // We use PostCSS for autoprefixing only.
   postcss: function() {
     return [
