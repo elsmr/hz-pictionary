@@ -1,0 +1,9 @@
+[collections.rooms]
+[[collections.rooms.indexes]]
+fields = [['name']]
+
+[groups.authenticated.rules.write]
+template = "collection('rooms').anyWrite()"
+
+[groups.authenticated.rules.read]
+template = "collection('rooms').anyRead()"
