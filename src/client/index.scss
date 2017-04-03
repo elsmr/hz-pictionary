@@ -7,3 +7,21 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+.app-wrapper {
+  min-width: 20em;
+  width: 100vw;
+  height: 100vh;
+  padding: 1em;
+  background-color: $accent-color;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: $special-font-family;
+}
