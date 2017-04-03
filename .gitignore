@@ -46,3 +46,6 @@ rethinkdb_data
 # secrets
 config/secrets.js
 config/tls
+
+# build
+build
