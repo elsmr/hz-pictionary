@@ -1,28 +1,46 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
+import ProtectedRoute from '../Auth/ProtectedRoute';
 import Home from '../Home/Home';
 import Room from '../Room/Room';
+import Login from '../Auth/Login';
+import Profile from '../Profile/Profile';
+import { fetchUserAuth } from '../../redux/actions';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { rooms: [] };
+    fetchUserAuth();
+    this.props.fetchUserAuth();
   }
 
   render() {
+    const { user, history } = this.props;
     return (
-      <Router>
+      <ConnectedRouter history={history}>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/:roomId" component={Room} />
-          <Route component={Home} />
+          <ProtectedRoute
+            path="/login"
+            redirectUrl="/"
+            isAuthorized={!user.isAuthorized}
+            render={props => <Login user={user} {...props} />}
+          />
+          <ProtectedRoute
+            path="/profile"
+            redirectUrl="/login"
+            isAuthorized={user.isAuthorized}
+            render={props => <Profile user={user} {...props} />}
+          />
+          <Route path="/:roomId" render={props => <Room user={user} {...props} />} />
+          <Route render={props => <Home user={user} {...props} />} />
         </Switch>
-      </Router>
+      </ConnectedRouter>
     );
   }
 }
 
 const mapStateToProps = state => ({ user: state.user });
 
-export default connect(mapStateToProps, {})(App);
+export default connect(mapStateToProps, { fetchUserAuth })(App);
