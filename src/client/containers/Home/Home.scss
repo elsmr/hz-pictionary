@@ -1,40 +1,5 @@
 @import "../../scss/_variables";
 
-* {
-  box-sizing: border-box;
-}
-
-.app-wrapper {
-  min-width: 20em;
-  width: 100vw;
-  height: 100vh;
-  padding: 1em;
-  background-color: $accent-color;
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
-  font-family: $special-font-family;
-}
-
-.header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  z-index: 100;
-
-  .header__controls {
-    display: flex;
-    justify-content: space-between;
-    .grommetux-button + .grommetux-button {
-      margin-left: 0.5em;
-    }
-    padding: 1em;
-  }
-}
-
 .main-content {
   display: flex;
   justify-content: center;
@@ -42,37 +7,4 @@
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
-
-  .room-form {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-
-    * {
-      flex: auto;
-    }
-
-    .room-form__button {
-      height: 2.5em;
-      margin-top: 0.5em;
-    }
-  }
-}
-
-@media screen and (min-width: 26em) {
-  .main-content {
-    .room-form {
-      .room-form__button {
-        margin-left: 0.5em;
-        margin-top: 0;
-      }
-    }
-  }
-
-  .header {
-    .header__controls {
-      justify-content: flex-end;
-    }
-  }
 }

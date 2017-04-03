@@ -1,21 +1,29 @@
 import React from 'react';
-import { Heading } from 'grommet';
-import RoomForm from '../../components/RoomForm';
+import { connect } from 'react-redux';
+import { Heading, Notification } from 'grommet';
+import RoomForm from './RoomForm';
 import Header from '../../components/Header';
+import { createRoom, logout } from '../../redux/actions';
 import './Home.scss';
 
-const Home = () => (
+const Home = ({ user, createRoom, logout }) => (
   <div className="app-wrapper">
-    <Header />
+    <Header isHome user={user} onLogout={logout} />
     <main className="main-content">
-      <Heading className="title" margin="large">hz Pictionary</Heading>
+      <Heading className="title" margin="large">hzPictionary</Heading>
       <RoomForm
-        onChange={e => e}
-        onSubmit={e => e}
+        disabled={!user.isAuthorized}
+        onSubmit={n => createRoom(n)}
       />
     </main>
+    { !user.isAuthorized && !user.authPending &&
+      <Notification
+        status="disabled"
+        message="You need to login or sign up to create a hzPictionary room!"
+      />
+    }
   </div>
 );
 
-export default Home;
+export default connect(null, { createRoom, logout })(Home);
 
