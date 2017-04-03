@@ -5,6 +5,9 @@ const path = require('path');
 const https = require('https');
 const cors = require('cors');
 const secrets = require('../../config/secrets');
+const roomRoutes = require('./routes/rooms');
+
+const PROJECT_NAME = 'hz_pictionary';
 
 const corsOptions = {
   origin: 'https://localhost:3000',
@@ -17,8 +20,9 @@ const httpsOptions = {
 };
 
 const hzOptions = {
-  project_name: 'hz_pictionary',
+  project_name: PROJECT_NAME,
   permissions: true,
+  auto_create_index: true,
   auth: {
     token_secret: secrets.token_secret,
   },
@@ -30,8 +34,19 @@ const app = express();
 app.use(cors(corsOptions));
 
 const httpsServer = https.createServer(httpsOptions, app);
-httpsServer.listen(PORT);
-console.log(`Server is listening on https://localhost:${PORT}`);
+
+app.use('/rooms', roomRoutes);
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/index.html'));
+});
 
 const hzServer = horizon(httpsServer, hzOptions);
 hzServer.add_auth_provider(horizon.auth.github, secrets.authProviders.github);
+
+hzServer._reql_conn.ready().then((conn) => {
+  app.rdbConnection = conn;
+  app.hz = horizon;
+  httpsServer.listen(PORT);
+  console.log(`Server is listening on https://localhost:${PORT}`);
+});
