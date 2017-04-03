@@ -2,8 +2,15 @@
 [[collections.rooms.indexes]]
 fields = [['name']]
 
-[groups.authenticated.rules.write]
+[collections.users]
+[[collections.users.indexes]]
+fields = [['name']]
+
+[groups.default.rules.read_users]
+template = "collection('users').anyRead()"
+
+[groups.authenticated.rules.write_rooms]
 template = "collection('rooms').anyWrite()"
 
-[groups.authenticated.rules.read]
+[groups.authenticated.rules.read_rooms]
 template = "collection('rooms').anyRead()"
