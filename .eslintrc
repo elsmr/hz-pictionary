@@ -1,4 +1,10 @@
 {
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "destructuring": true,
+    "spread": true,
+    "restParams": true
+  },
   "env": {
     "browser": true,
     "node": true,
@@ -11,9 +17,12 @@
     "comma-dangle": ["error", {
         "arrays": "always-multiline",
         "objects": "always-multiline",
-        "imports": "never",
+        "imports": "always-multiline",
         "exports": "always-multiline",
         "functions": "never"
-    }]
+    }],
+    "react/prop-types": 0,
+    "react/prefer-stateless-function": 1,
+    "no-shadow": 0,
   }
 }
