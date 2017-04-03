@@ -1,19 +1,45 @@
 import React from 'react';
 import { Button } from 'grommet';
+import HomeIcon from 'grommet/components/icons/base/Home';
+import ProfileControls from './ProfileControls';
+import './Header.scss';
 
-const Header = () => (
+const Header = ({ isHome, user, onLogout }) => (
   <div className="header">
-    <div className="header__controls">
-      <Button
-        label="Sign in"
-        onClick={() => null}
-        primary
-      />
-      <Button
-        label="Sign up"
-        onClick={() => null}
-      />
-    </div>
+    { isHome ?
+      (
+        <div className="header__controls">
+          { (!user.isAuthorized || user.authPending) ?
+            (
+              <span>
+                <Button
+                  label="Sign in"
+                  onClick={() => null}
+                  primary
+                />
+                <Button
+                  label="Sign up"
+                  onClick={() => null}
+                />
+              </span>
+            ) : (
+              <ProfileControls username={user.details.username} onLogout={onLogout} />
+            )
+          }
+        </div>
+      ) : (
+        <div className="header__controls header__controls--single">
+          <Button
+            label="Home"
+            icon={<HomeIcon />}
+            onClick={() => null}
+          />
+          { user.isAuthorized &&
+            <ProfileControls username={user.details.username} onLogout={onLogout} />
+          }
+        </div>
+      )
+    }
   </div>
 );
 
