@@ -9,6 +9,9 @@ fields = [['name']]
 [groups.default.rules.read_users]
 template = "collection('users').anyRead()"
 
+[groups.default.rules.write_users]
+template = "collection('users').anyWrite(userId())"
+
 [groups.authenticated.rules.write_rooms]
 template = "collection('rooms').anyWrite()"
 
