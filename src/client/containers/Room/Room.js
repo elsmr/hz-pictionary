@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { startWatchingRoom, stopWatchingRoom } from '../../redux/actions';
+import PageSpinner from '../../components/PageSpinner';
 
 class Room extends React.Component {
   constructor(props) {
@@ -15,7 +16,11 @@ class Room extends React.Component {
   }
 
   render() {
-    const { match: { params: { roomId } } } = this.props;
+    const { match: { params: { roomId } }, room } = this.props;
+
+    if (room.isLoading) {
+      return <PageSpinner />;
+    }
     return (
       <div>
         Room: { roomId }
