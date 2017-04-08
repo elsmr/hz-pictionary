@@ -8,24 +8,22 @@ import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/defaultIfEmpty';
 import { push } from 'connected-react-router';
 import { hzRooms } from '../../lib/horizon';
-import { actionTypes, updateRoom } from '../actions';
+import { actionTypes, updateRoom, clearRoomForm } from '../actions';
 
 const initialState = {
   loading: true,
-  room: {
-    id: '',
-    name: '',
-    canvas: {},
-    config: {},
-    participants: [],
-    creatorId: '',
-  },
+  id: '',
+  name: '',
+  canvas: {},
+  config: {},
+  participants: [],
+  creatorId: '',
 };
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.updateRoom:
-      return Object.assign({}, state, { room: action.room, loading: false });
+      return Object.assign({}, state, { loading: false, ...action.room });
     default:
       return state;
   }
@@ -34,7 +32,12 @@ export const reducer = (state = initialState, action) => {
 export const createRoomEpic = action$ =>
   action$.ofType(actionTypes.createRoom)
     .do(action => hzRooms.store(Object.assign(initialState, { name: action.name })))
-    .map(action => push(`/${action.name}`));
+    .mergeMap(action =>
+      Observable.concat(
+        Observable.of(clearRoomForm()),
+        Observable.of(push(`/${action.name}`))
+      )
+    );
 
 export const watchRoomEpic = action$ =>
   action$.ofType(actionTypes.startWatchingRoom)

@@ -36,6 +36,8 @@ export const reducer = (state = initialState, action) => {
       });
     case actionTypes.fetchRoomNameValidityRejected:
       return Object.assign({}, state, { formState: FORM_STATES.INVALID });
+    case actionTypes.clearRoomForm:
+      return initialState;
     default:
       return state;
   }
