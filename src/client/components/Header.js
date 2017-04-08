@@ -23,7 +23,7 @@ const Header = ({ isHome, user, onLogout }) => (
                 />
               </span>
             ) : (
-              <ProfileControls username={user.details.username} onLogout={onLogout} />
+              <ProfileControls username={user.name} onLogout={onLogout} />
             )
           }
         </div>
@@ -35,7 +35,7 @@ const Header = ({ isHome, user, onLogout }) => (
             onClick={() => null}
           />
           { user.isAuthorized &&
-            <ProfileControls username={user.details.username} onLogout={onLogout} />
+            <ProfileControls username={user.name} onLogout={onLogout} />
           }
         </div>
       )
