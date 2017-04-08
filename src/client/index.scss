@@ -25,3 +25,41 @@ body {
 .title {
   font-family: $special-font-family;
 }
+
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+  * {
+    flex: auto;
+  }
+
+  .form__state {
+    position: absolute;
+    transform: translate(0, 4px);
+  }
+
+  .form__button {
+    height: 2.5em;
+    margin-top: 0.5em;
+  }
+}
+
+.grommetux-toast__container {
+  z-index: 5000;
+  opacity: 1;
+}
+
+@media screen and (min-width: 26em) {
+  .main-content {
+    .form {
+      .form__button {
+        margin-left: 0.5em;
+        margin-top: 0;
+      }
+    }
+  }
+}
