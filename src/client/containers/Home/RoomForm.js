@@ -4,7 +4,6 @@ import { Button, TextInput } from 'grommet';
 import { setRoomFormName, setRoomFormState } from '../../redux/actions';
 import { FORM_STATES } from '../../constants';
 import FormStateIcon from '../../components/FormStateIcon';
-import './RoomForm.scss';
 
 const isValid = name => name.length > 3;
 
@@ -29,9 +28,9 @@ const RoomForm = ({
   onSubmit,
   roomForm: { name, formState },
 }) => (
-  <div className="room-form">
+  <div className="form">
     <TextInput
-      className="room-form__input"
+      className="form__input"
       onDOMChange={e =>
         handleChange(
           setRoomFormName,
@@ -42,11 +41,11 @@ const RoomForm = ({
       }
       disabled={formState === FORM_STATES.LOCKED}
     />
-    <span className="room-form__state">
+    <span className="form__state">
       <FormStateIcon state={formState} />
     </span>
     <Button
-      className="room-form__button"
+      className="form__button"
       label="Create room"
       onClick={() => handleSubmit(onSubmit, name, formState)}
       disabled={formState === FORM_STATES.LOCKED || !isValid(name)}

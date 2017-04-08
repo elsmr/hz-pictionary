@@ -1,21 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Heading } from 'grommet';
+import { Headline } from 'grommet';
 import Header from '../../components/Header';
-import { logout } from '../../redux/actions';
+import { logout, setUsername } from '../../redux/actions';
 import ProfileForm from './ProfileForm';
 
-const Profile = ({ user, logout }) => (
+const Profile = ({ user, logout, setUsername }) => (
   <div className="app-wrapper">
     <Header user={user} onLogout={logout} />
     <main className="main-content">
       <div className="login-container">
-        <Heading>Set username</Heading>
-        <ProfileForm username={user.name} />
+        <Headline size="small">{user.name}&#39;s Profile</Headline>
+        <ProfileForm
+          username={user.name}
+          onSubmit={name => setUsername(name)}
+        />
       </div>
     </main>
   </div>
 );
 
-export default connect(null, { logout })(Profile);
+export default connect(null, { logout, setUsername })(Profile);
 
