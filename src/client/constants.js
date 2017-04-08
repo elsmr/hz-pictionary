@@ -15,8 +15,16 @@ export const FORM_STATES = {
   LOCKED: 4,
 };
 
+export const TOAST_STATES = {
+  SUCCESS: 'ok',
+  WARNING: 'warning',
+  ERROR: 'critical',
+  DEFAULT: 'unknown',
+};
+
 export const COLLECTIONS = {
   ROOMS: 'rooms',
+  USERS: 'users',
 };
 
 export const AUTH_PROVIDERS = {
