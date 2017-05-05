@@ -5,7 +5,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/throttleTime';
+import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/observable/fromEvent';
 import { push } from 'connected-react-router';
@@ -116,7 +116,7 @@ export const watchCanvasEpic = action$ =>
 
 export const storeCanvasEpic = (action$, store) =>
   action$.ofType(actionTypes.updateCanvas)
-    .throttleTime(100)
+    .sampleTime(200)
     .do(() => {
       const { room } = store.getState();
       hzRooms.update(room);

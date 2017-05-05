@@ -36,7 +36,7 @@ class Room extends React.Component {
         </div>
         <div className="room__container">
           <DrawableCanvas
-            enabled={user.id === room.game.drawingPlayer.id}
+            enabled
             lines={room.canvas.data}
             settings={user.drawingSettings}
           />

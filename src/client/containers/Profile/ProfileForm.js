@@ -51,7 +51,10 @@ const ProfileForm = ({
     <Button
       className="form__button"
       label="Update username"
-      onClick={() => handleSubmit(onSubmit, profileForm.username, profileForm.formState)}
+      onClick={(e) => {
+        e.preventDefault();
+        handleSubmit(onSubmit, profileForm.username, profileForm.formState);
+      }}
       disabled={profileForm.formState === FORM_STATES.LOCKED || !isValid(profileForm.username)}
       primary
       type="submit"
