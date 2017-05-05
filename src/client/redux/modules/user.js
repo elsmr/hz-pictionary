@@ -17,13 +17,14 @@ import {
   clearProfileForm,
 } from '../actions';
 import { hz, hzUsers } from '../../lib/horizon';
-import { FORM_STATES, TOAST_STATES } from '../../constants';
+import { FORM_STATES, TOAST_STATES, DEFAULT_DRAWING_SETTINGS } from '../../constants';
 
 const initialState = {
   authPending: true,
   isAuthorized: false,
   id: '',
   name: '',
+  drawingSettings: DEFAULT_DRAWING_SETTINGS,
   error: null,
 };
 
@@ -31,6 +32,8 @@ export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.logout:
       return Object.assign({}, initialState, { authPending: false });
+    case actionTypes.setDrawingSettings:
+      return Object.assign({}, state, { drawingSettings: action.settings });
     case actionTypes.fetchUserAuthFulfilled:
       return Object.assign({}, state, {
         ...action.user,

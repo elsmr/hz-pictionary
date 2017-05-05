@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { startWatchingRoom, stopWatchingRoom } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
-import DrawableCanvas from '../../components/DrawableCanvas';
+import DrawableCanvas from '../../components/Canvas/DrawableCanvas';
 import Header from '../../components/Header';
 import Chat from '../../components/Chat/Chat';
+import './Room.scss';
 
 class Room extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Room extends React.Component {
   }
 
   render() {
-    const { match: { params: { roomId } }, room, user } = this.props;
+    const { room, user } = this.props;
 
     if (user.authPending) {
       return <PageSpinner />;
@@ -35,16 +36,15 @@ class Room extends React.Component {
         </div>
         <div className="room__container">
           <DrawableCanvas
-            enabled={user && user.id === room.game.drawingPlayer.id}
+            enabled={user.id === room.game.drawingPlayer.id}
             lines={room.canvas.data}
+            settings={user.drawingSettings}
           />
           <Chat
             messages={room.chat}
-            enabled={user && room.participants.find(p => p.id === user.id)}
+            enabled={!!room.participants.find(p => p.id === user.id)}
           />
         </div>
-
-        <p>Room: { roomId }</p>
       </div>
     );
   }

@@ -34,6 +34,7 @@ export const actionTypes = {
   updateCanvas: 'UPDATE_CANVAS',
   clearCanvas: 'CLEAR_CANVAS',
   noOp: 'NOOP',
+  setDrawingSettings: 'SET_DRAWING_SETTINGS',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -100,3 +101,4 @@ export const updateCanvas = data => ({ type: actionTypes.updateCanvas, data });
 export const clearCanvas = () => ({ type: actionTypes.clearCanvas });
 export const noOp = () => ({ type: actionTypes.noOp });
 
+export const setDrawingSettings = settings => ({ type: actionTypes.setDrawingSettings, settings });

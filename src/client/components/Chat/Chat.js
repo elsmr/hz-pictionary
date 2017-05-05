@@ -9,7 +9,7 @@ const Chat = ({ messages, enabled }) => (
       {
         messages && messages.length > 0
         ? (
-          messages.map(message => <ChatMessage message={message} />)
+          messages.map(message => <ChatMessage key={`${message.date}${message.sender}`} message={message} />)
         ) : (
           <Spinning />
         )

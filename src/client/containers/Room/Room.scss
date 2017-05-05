@@ -1,7 +1,18 @@
 .room__container {
   display: flex;
+   flex-direction: column;
 }
 
 .canvas__container {
-  flex: 1;
+  flex-basis: 60%;
+}
+
+.chat__container {
+  min-width: 15em;
+}
+
+@media screen and (min-width: 50em) {
+  .room__container {
+    flex-direction: row;
+  }
 }

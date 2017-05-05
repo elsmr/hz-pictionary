@@ -43,3 +43,8 @@ export const PLAYER_COLORS = [
   '#ff7d28',
   '#dc2878',
 ];
+
+export const DEFAULT_DRAWING_SETTINGS = {
+  width: 10,
+  color: '#000',
+};
