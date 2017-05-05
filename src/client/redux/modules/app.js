@@ -1,7 +1,12 @@
-import { actionTypes } from '../actions';
+import 'rxjs/add/operator/mapTo';
+import { actionTypes, fetchUserAuth } from '../actions';
 
 const initialState = {
   toast: null,
+  dimensions: {
+    width: null,
+    height: null,
+  },
 };
 
 export const reducer = (state = initialState, action) => {
@@ -15,9 +20,18 @@ export const reducer = (state = initialState, action) => {
       });
     case actionTypes.destroyToast:
       return Object.assign({}, state, { toast: null });
+    case actionTypes.initializeApp:
+      return Object.assign({}, state, {
+        dimensions: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
+      });
     default:
       return state;
   }
 };
 
-export const x = 2;
+export const initAppEpic = action$ =>
+  action$.ofType(actionTypes.initializeApp)
+    .mapTo(fetchUserAuth());

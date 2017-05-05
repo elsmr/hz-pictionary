@@ -33,3 +33,13 @@ export const AUTH_PROVIDERS = {
 };
 
 export const USER_TYPING_DEBOUNCE = 250;
+export const STORE_CHANGES_DEBOUNCE = 100;
+
+export const PLAYER_COLORS = [
+  '#ff324d',
+  '#ffd602',
+  '#8cc800',
+  '#00cceb',
+  '#ff7d28',
+  '#dc2878',
+];

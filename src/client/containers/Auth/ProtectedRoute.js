@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
 const ProtectedRoute = ({ render, isAuthorized, redirectUrl, ...otherProps }) => (
@@ -17,8 +18,8 @@ const ProtectedRoute = ({ render, isAuthorized, redirectUrl, ...otherProps }) =>
 );
 
 ProtectedRoute.propTypes = {
-  isAuthorized: React.PropTypes.bool.isRequired,
-  redirectUrl: React.PropTypes.string.isRequired,
+  isAuthorized: PropTypes.bool.isRequired,
+  redirectUrl: PropTypes.string.isRequired,
 };
 
 export default ProtectedRoute;

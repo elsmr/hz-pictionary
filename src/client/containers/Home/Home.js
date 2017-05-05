@@ -13,7 +13,7 @@ const Home = ({ user, createRoom, logout }) => (
       <Heading className="title" margin="large">hzPictionary</Heading>
       <RoomForm
         disabled={!user.isAuthorized}
-        onSubmit={n => createRoom(n)}
+        onSubmit={n => createRoom(n, user)}
       />
     </main>
     { !user.isAuthorized && !user.authPending &&

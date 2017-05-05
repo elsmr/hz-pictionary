@@ -1,0 +1,11 @@
+.canvas__container {
+  max-width: 100%;
+  min-width: 20em;
+}
+
+.canvas {
+  border: red 2px solid;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}

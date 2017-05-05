@@ -1,13 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { startWatchingRoom, stopWatchingRoom } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
+import DrawableCanvas from '../../components/DrawableCanvas';
+import Header from '../../components/Header';
 
 class Room extends React.Component {
   constructor(props) {
     super(props);
-    const { startWatchingRoom, match: { params: { roomId } } } = props;
-    startWatchingRoom(roomId);
+    const { startWatchingRoom, match: { params: { roomId } }, user } = props;
+    if (user.isAuthorized) {
+      startWatchingRoom(roomId);
+    }
   }
 
   componentWillUnmount() {
@@ -16,14 +21,25 @@ class Room extends React.Component {
   }
 
   render() {
-    const { match: { params: { roomId } }, room } = this.props;
+    const { match: { params: { roomId } }, room, user } = this.props;
 
-    if (room.isLoading) {
+    if (room.loading) {
       return <PageSpinner />;
+    } else if (!user.isAuthorized && !user.authPending) {
+      return <Redirect to="/" />;
     }
     return (
-      <div>
-        Room: { roomId }
+      <div className="app-wrapper">
+        <div>
+          <Header
+            user={user}
+          />
+        </div>
+        <DrawableCanvas
+          enabled={user.id === room.game.drawingPlayer.id || true}
+          lines={room.canvas.data}
+        />
+        <p>Room: { roomId }</p>
       </div>
     );
   }

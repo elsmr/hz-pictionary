@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, TextInput } from 'grommet';
 import { setProfileFormUsername, setProfileFormState } from '../../redux/actions';
@@ -56,7 +57,7 @@ const ProfileForm = ({
 );
 
 ProfileForm.propTypes = {
-  onSubmit: React.PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({ profileForm: state.profileForm });

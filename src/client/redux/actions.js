@@ -23,10 +23,17 @@ export const actionTypes = {
   wathingRoomRejected: 'WATCHING_ROOM_REJECTED',
   logout: 'LOGOUT',
   updateRoom: 'UPDATE_ROOM',
+  updateRoomNotCanvas: 'UPDATE_ROOM_NOT_CANVAS',
   showToast: 'SHOW_TOAST',
   destroyToast: 'DESTROY_TOAST',
   clearRoomForm: 'CLEAR_ROOMFORM',
   clearProfileForm: 'CLEAR_PROFILEFORM',
+  initializeApp: 'INITIALIZE_APP',
+  startWatchingCanvas: 'START_WATCHING_CANVAS',
+  stopWatchingCanvas: 'STOP_WATCHING_CANVAS',
+  updateCanvas: 'UPDATE_CANVAS',
+  storeCanvas: 'STORE_CANVAS',
+  clearCanvas: 'CLEAR_CANVAS',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -40,7 +47,7 @@ export const setUsername = name => ({ type: actionTypes.setUsername, name });
 export const setUsernameFulfilled = () => ({ type: actionTypes.setUsernameFulfilled });
 export const setUsernameRejected = () => ({ type: actionTypes.setUsernameRejected });
 
-export const createRoom = name => ({ type: actionTypes.createRoom, name });
+export const createRoom = (name, user) => ({ type: actionTypes.createRoom, name, user });
 export const createRoomFulfilled = () => ({ type: actionTypes.createRoomFulfilled });
 export const createRoomRejected = () => ({ type: actionTypes.createRoomRejected });
 
@@ -78,8 +85,18 @@ export const startWatchingRoom = name => ({ type: actionTypes.startWatchingRoom,
 export const stopWatchingRoom = name => ({ type: actionTypes.stopWatchingRoom, name });
 export const watchingRoomRejected = error => ({ type: actionTypes.watchingRoomRejected, error });
 
+export const startWatchingCanvas = canvas => ({ type: actionTypes.startWatchingCanvas, canvas });
+export const stopWatchingCanvas = canvas => ({ type: actionTypes.stopWatchingCanvas, canvas });
+
 export const logout = () => ({ type: actionTypes.logout });
 export const updateRoom = room => ({ type: actionTypes.updateRoom, room });
+export const updateRoomNotCanvas = room => ({ type: actionTypes.updateRoomNotCanvas, room });
 export const showToast = (status, message) => ({ type: actionTypes.showToast, status, message });
 export const destroyToast = () => ({ type: actionTypes.destroyToast });
+
+export const initializeApp = () => ({ type: actionTypes.initializeApp });
+
+export const updateCanvas = data => ({ type: actionTypes.updateCanvas, data });
+export const storeCanvas = () => ({ type: actionTypes.storeCanvas });
+export const clearCanvas = () => ({ type: actionTypes.clearCanvas });
 
