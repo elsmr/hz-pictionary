@@ -32,8 +32,8 @@ export const actionTypes = {
   startWatchingCanvas: 'START_WATCHING_CANVAS',
   stopWatchingCanvas: 'STOP_WATCHING_CANVAS',
   updateCanvas: 'UPDATE_CANVAS',
-  storeCanvas: 'STORE_CANVAS',
   clearCanvas: 'CLEAR_CANVAS',
+  noOp: 'NOOP',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -97,6 +97,6 @@ export const destroyToast = () => ({ type: actionTypes.destroyToast });
 export const initializeApp = () => ({ type: actionTypes.initializeApp });
 
 export const updateCanvas = data => ({ type: actionTypes.updateCanvas, data });
-export const storeCanvas = () => ({ type: actionTypes.storeCanvas });
 export const clearCanvas = () => ({ type: actionTypes.clearCanvas });
+export const noOp = () => ({ type: actionTypes.noOp });
 

@@ -17,25 +17,25 @@ const mapEventToCoordinates = (canvas, event) => {
   };
 };
 
-const defaultOptions = {
-  width: 10,
-  color: '#000',
-};
-
 export const mouseEventStream = (canvas) => {
   const mouseDown$ = Observable.fromEvent(canvas, 'mousedown');
   const mouseMove$ = Observable.fromEvent(canvas, 'mousemove');
   const mouseUp$ = Observable.fromEvent(canvas, 'mouseup');
 
   return mouseDown$
-      .switchMap(event =>
+      .switchMap(mouseDownEvent =>
         mouseMove$
           .throttleTime(16)
-          .startWith(event, event)
+          .startWith(mouseDownEvent, mouseDownEvent)
           .map(event => mapEventToCoordinates(canvas, event))
           .pairwise()
           .takeUntil(mouseUp$)
       );
+};
+
+const defaultOptions = {
+  width: 10,
+  color: '#000',
 };
 
 export class CanvasDrawer {

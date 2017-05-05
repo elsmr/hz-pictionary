@@ -14,12 +14,12 @@ const Header = ({ isHome, user, onLogout }) => (
               <span>
                 <Button
                   label="Sign in"
-                  onClick={() => null}
+                  path="/login"
                   primary
                 />
                 <Button
                   label="Sign up"
-                  onClick={() => null}
+                  path="/login"
                 />
               </span>
             ) : (
@@ -32,7 +32,7 @@ const Header = ({ isHome, user, onLogout }) => (
           <Button
             label="Home"
             icon={<HomeIcon />}
-            onClick={() => null}
+            path="/"
           />
           { user.isAuthorized &&
             <ProfileControls username={user.name} onLogout={onLogout} />

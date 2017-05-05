@@ -5,7 +5,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/operator/defaultIfEmpty';
 import 'rxjs/add/observable/fromEvent';
 import { push } from 'connected-react-router';
@@ -16,16 +16,15 @@ import {
   clearRoomForm,
   updateRoomNotCanvas,
   updateCanvas,
-  storeCanvas,
+  noOp,
   // clearCanvas,
 } from '../actions';
 import { mouseEventStream } from '../../lib/canvas';
-import { STORE_CHANGES_DEBOUNCE } from '../../constants';
+import { } from '../../constants';
 
 const initialState = {
   loading: true,
   started: false,
-  id: '',
   name: '',
   canvas: {
     data: [],
@@ -69,10 +68,13 @@ export const reducer = (state = initialState, action) => {
 export const createRoomEpic = action$ =>
   action$.ofType(actionTypes.createRoom)
     .do(action =>
-      hzRooms.store(
+      hzRooms.insert(
         Object.assign(initialState, {
           name: action.name,
           creator: action.user,
+          game: {
+            drawingPlayer: action.user,
+          },
         })
       ))
     .mergeMap(action =>
@@ -114,5 +116,9 @@ export const watchCanvasEpic = action$ =>
 
 export const storeCanvasEpic = (action$, store) =>
   action$.ofType(actionTypes.updateCanvas)
-    .debounceTime(STORE_CHANGES_DEBOUNCE)
-    .mapTo(storeCanvas(store.getState().room.canvas.data));
+    .throttleTime(100)
+    .do(() => {
+      const { room } = store.getState();
+      hzRooms.update(room);
+    })
+    .mapTo(noOp());

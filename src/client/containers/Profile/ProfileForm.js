@@ -5,8 +5,10 @@ import { Button, TextInput } from 'grommet';
 import { setProfileFormUsername, setProfileFormState } from '../../redux/actions';
 import FormStateIcon from '../../components/FormStateIcon';
 import { FORM_STATES } from '../../constants';
+import { required } from '../../lib/validators';
 
-const isValid = name => name.length > 3;
+
+const isValid = required;
 
 const handleChange = (dispatchName, dispatchState, state, value) => {
   if (state !== FORM_STATES.PRISTINE) {
@@ -30,7 +32,7 @@ const ProfileForm = ({
   username,
   profileForm,
 }) => (
-  <div className="form">
+  <form action="" className="form">
     <TextInput
       onDOMChange={
         e => handleChange(
@@ -52,8 +54,9 @@ const ProfileForm = ({
       onClick={() => handleSubmit(onSubmit, profileForm.username, profileForm.formState)}
       disabled={profileForm.formState === FORM_STATES.LOCKED || !isValid(profileForm.username)}
       primary
+      type="submit"
     />
-  </div>
+  </form>
 );
 
 ProfileForm.propTypes = {

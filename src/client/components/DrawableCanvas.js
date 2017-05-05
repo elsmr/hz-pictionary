@@ -6,12 +6,13 @@ import './DrawableCanvas.scss';
 
 class DrawableCanvas extends React.Component {
   componentDidMount() {
-    const { startWatchingCanvas, enabled } = this.props;
+    const { startWatchingCanvas, enabled, lines } = this.props;
     if (enabled) {
       startWatchingCanvas(this.canvas);
     }
 
     this.drawer = new CanvasDrawer(this.canvas);
+    this.drawer.renderLines(lines || []);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -28,7 +29,7 @@ class DrawableCanvas extends React.Component {
   render() {
     return (
       <div className="canvas__container">
-        <canvas className="canvas" ref={(canvas) => { this.canvas = canvas; }} width="1024" height="640" />
+        <canvas className="canvas" ref={(canvas) => { this.canvas = canvas; }} width="1920" height="1440" />
       </div>
     );
   }

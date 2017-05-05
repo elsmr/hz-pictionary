@@ -18,7 +18,7 @@ import { FORM_STATES, USER_TYPING_DEBOUNCE } from '../../constants';
 import { hzRooms } from '../../lib/horizon';
 
 const initialState = {
-  formState: FORM_STATES.LOCKED,
+  formState: FORM_STATES.PRISTINE,
   name: '',
 };
 

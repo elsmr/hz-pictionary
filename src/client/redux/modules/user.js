@@ -65,7 +65,10 @@ export const fetchUserAuthEpic = action$ =>
             );
           })
       ) : (
-        Observable.of(fetchUserAuthRejected('No user logged in'))
+        Observable.concat(
+          Observable.of(fetchUserAuthRejected('No user logged in')),
+          Observable.of(setRoomFormState(FORM_STATES.LOCKED))
+        )
       )
     );
 

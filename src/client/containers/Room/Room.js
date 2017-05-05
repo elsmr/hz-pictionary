@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { startWatchingRoom, stopWatchingRoom } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
 import DrawableCanvas from '../../components/DrawableCanvas';
 import Header from '../../components/Header';
+import Chat from '../../components/Chat/Chat';
 
 class Room extends React.Component {
   constructor(props) {
@@ -23,10 +23,8 @@ class Room extends React.Component {
   render() {
     const { match: { params: { roomId } }, room, user } = this.props;
 
-    if (room.loading) {
+    if (user.authPending) {
       return <PageSpinner />;
-    } else if (!user.isAuthorized && !user.authPending) {
-      return <Redirect to="/" />;
     }
     return (
       <div className="app-wrapper">
@@ -35,10 +33,17 @@ class Room extends React.Component {
             user={user}
           />
         </div>
-        <DrawableCanvas
-          enabled={user.id === room.game.drawingPlayer.id || true}
-          lines={room.canvas.data}
-        />
+        <div className="room__container">
+          <DrawableCanvas
+            enabled={user && user.id === room.game.drawingPlayer.id}
+            lines={room.canvas.data}
+          />
+          <Chat
+            messages={room.chat}
+            enabled={user && room.participants.find(p => p.id === user.id)}
+          />
+        </div>
+
         <p>Room: { roomId }</p>
       </div>
     );
