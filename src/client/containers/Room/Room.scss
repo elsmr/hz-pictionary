@@ -1,17 +1,15 @@
 .room__container {
   display: flex;
-   flex-direction: column;
+  flex-direction: column;
+  height: 100%;
+  margin-top: 1em;
 }
 
-.canvas__container {
-  flex-basis: 60%;
+.grommetux-notification {
+  margin: 1em 0;
 }
 
-.chat__container {
-  min-width: 15em;
-}
-
-@media screen and (min-width: 50em) {
+@media screen and (min-width: 80em) {
   .room__container {
     flex-direction: row;
   }

@@ -27,9 +27,10 @@ class DrawableCanvas extends React.Component {
   }
 
   render() {
+    const { enabled } = this.props;
     return (
       <div className="canvas__container">
-        <canvas className="canvas" ref={(canvas) => { this.canvas = canvas; }} width="1000" height="800" />
+        <canvas className={`canvas${enabled ? ' drawable' : ''}`} ref={(canvas) => { this.canvas = canvas; }} width="1920" height="1080" />
       </div>
     );
   }

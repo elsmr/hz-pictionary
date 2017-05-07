@@ -7,6 +7,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/defaultIfEmpty';
+import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/observable/fromEvent';
 import { push } from 'connected-react-router';
 import { hzRooms } from '../../lib/horizon';
@@ -20,7 +21,7 @@ import {
   // clearCanvas,
 } from '../actions';
 import { mouseEventStream } from '../../lib/canvas';
-import { } from '../../constants';
+import { PLAYER_COLORS } from '../../constants';
 
 const initialState = {
   loading: true,
@@ -39,7 +40,7 @@ const initialState = {
     {
       sender: 'Game',
       message: 'Welcome to the pictionary chat, make a guess!',
-      date: new Date(),
+      timestamp: Date.now(),
     },
   ],
   game: {
@@ -54,12 +55,16 @@ export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.updateRoom:
       return Object.assign({}, state, { ...action.room, loading: false });
+    case actionTypes.clearRoom:
+      return initialState;
     case actionTypes.updateRoomNotCanvas:
       return Object.assign({}, state, { ...action.room, loading: false, canvas: state.canvas });
     case actionTypes.updateCanvas:
       return Object.assign({}, state, { canvas: { data: [...state.canvas.data, action.data] } });
     case actionTypes.clearCanvas:
       return Object.assign({}, state, { canvas: { data: [] } });
+    case actionTypes.addParticipant:
+      return Object.assign({}, state, { participants: [...state.participants, action.user] });
     default:
       return state;
   }
@@ -75,6 +80,9 @@ export const createRoomEpic = action$ =>
           game: {
             drawingPlayer: action.user,
           },
+          participants: [
+            Object.assign({}, action.user, { color: PLAYER_COLORS[0] }),
+          ],
         })
       ))
     .mergeMap(action =>
@@ -92,12 +100,13 @@ export const watchRoomEpic = (action$, store) =>
         Observable.empty()
       )
         .defaultIfEmpty()
+        .distinctUntilChanged()
         .map((room) => {
           if (!room) {
             return push('/');
           } else if (room.canvas) {
-            const { user, room } = store.getState();
-            if (user.id === room.game.drawingPlayer.id) {
+            const { user, room: stateRoom } = store.getState();
+            if (user.id === room.game.drawingPlayer.id && stateRoom.canvas.data.length > 0) {
               return updateRoomNotCanvas(room);
             }
           }
@@ -114,9 +123,11 @@ export const watchCanvasEpic = action$ =>
         .takeUntil(action$.ofType(actionTypes.stopWatchingCanvas))
     );
 
-export const storeCanvasEpic = (action$, store) =>
-  action$.ofType(actionTypes.updateCanvas)
-    .sampleTime(200)
+export const storeRoomEpic = (action$, store) =>
+  Observable.merge(
+    action$.ofType(actionTypes.updateCanvas).sampleTime(200),
+    action$.ofType(actionTypes.addParticipant)
+  )
     .do(() => {
       const { room } = store.getState();
       hzRooms.update(room);

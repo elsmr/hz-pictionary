@@ -7,7 +7,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/mergeMapTo';
 import Horizon from '@horizon/client';
-import { push } from 'connected-react-router';
+import { goBack } from 'connected-react-router';
 import {
   actionTypes,
   fetchUserAuthFulfilled,
@@ -85,7 +85,7 @@ export const setUsernameEpic = action$ =>
           Observable.concat(
             Observable.of(showToast(TOAST_STATES.SUCCESS, 'Username successfully updated')),
             Observable.of(clearProfileForm()),
-            Observable.of(push('/'))
+            Observable.of(goBack())
           )
         )
         .catch(() => showToast(TOAST_STATES.ERROR, 'Username update failed, please try again'))

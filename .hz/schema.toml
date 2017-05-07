@@ -6,14 +6,14 @@ fields = [['name']]
 [[collections.users.indexes]]
 fields = [['name']]
 
-[groups.default.rules.read_users]
-template = "collection('users').anyRead()"
+[groups.authenticated.rules.read_users]
+template = "collection('users').anyRead(userId())"
 
-[groups.default.rules.write_users]
+[groups.authenticated.rules.write_users]
 template = "collection('users').anyWrite(userId())"
 
 [groups.authenticated.rules.write_rooms]
 template = "collection('rooms').anyWrite()"
 
-[groups.authenticated.rules.read_rooms]
+[groups.default.rules.read_rooms]
 template = "collection('rooms').anyRead()"

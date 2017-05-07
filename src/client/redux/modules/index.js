@@ -2,9 +2,10 @@ import { combineEpics } from 'redux-observable';
 import { combineReducers } from 'redux';
 import { reducer as app, initAppEpic } from './app';
 import { reducer as user, fetchUserAuthEpic, logoutEpic, setUsernameEpic } from './user';
-import { reducer as room, watchRoomEpic, createRoomEpic, storeCanvasEpic, watchCanvasEpic } from './room';
+import { reducer as room, watchRoomEpic, createRoomEpic, storeRoomEpic, watchCanvasEpic } from './room';
 import { reducer as roomForm, updateRoomFormEpic } from './roomForm';
 import { reducer as profileForm, updateProfileFormEpic } from './profileForm';
+import { sendMessageEpic } from './chat';
 
 export const rootEpic = combineEpics(
   fetchUserAuthEpic,
@@ -15,8 +16,9 @@ export const rootEpic = combineEpics(
   updateProfileFormEpic,
   setUsernameEpic,
   initAppEpic,
-  storeCanvasEpic,
-  watchCanvasEpic
+  storeRoomEpic,
+  watchCanvasEpic,
+  sendMessageEpic
 );
 
 export const rootReducer = combineReducers({

@@ -33,8 +33,11 @@ export const actionTypes = {
   stopWatchingCanvas: 'STOP_WATCHING_CANVAS',
   updateCanvas: 'UPDATE_CANVAS',
   clearCanvas: 'CLEAR_CANVAS',
-  noOp: 'NOOP',
+  noOp: 'NO_OP',
   setDrawingSettings: 'SET_DRAWING_SETTINGS',
+  clearRoom: 'CLEAR_ROOM',
+  sendMessage: 'SEND_MESSAGE',
+  addParticipant: 'ADD_PARTICIPANT',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -91,6 +94,7 @@ export const stopWatchingCanvas = canvas => ({ type: actionTypes.stopWatchingCan
 
 export const logout = () => ({ type: actionTypes.logout });
 export const updateRoom = room => ({ type: actionTypes.updateRoom, room });
+export const clearRoom = () => ({ type: actionTypes.clearRoom });
 export const updateRoomNotCanvas = room => ({ type: actionTypes.updateRoomNotCanvas, room });
 export const showToast = (status, message) => ({ type: actionTypes.showToast, status, message });
 export const destroyToast = () => ({ type: actionTypes.destroyToast });
@@ -102,3 +106,6 @@ export const clearCanvas = () => ({ type: actionTypes.clearCanvas });
 export const noOp = () => ({ type: actionTypes.noOp });
 
 export const setDrawingSettings = settings => ({ type: actionTypes.setDrawingSettings, settings });
+
+export const sendMessage = message => ({ type: actionTypes.sendMessage, message });
+export const addParticipant = user => ({ type: actionTypes.addParticipant, user });

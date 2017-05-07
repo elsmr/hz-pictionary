@@ -21,7 +21,7 @@ const mapEventToCoordinates = (canvas, event) => {
 export const mouseEventStream = (canvas) => {
   const mouseDown$ = Observable.fromEvent(canvas, 'mousedown');
   const mouseMove$ = Observable.fromEvent(canvas, 'mousemove');
-  const mouseUp$ = Observable.fromEvent(canvas, 'mouseup');
+  const mouseUp$ = Observable.fromEvent(document, 'mouseup');
 
   return mouseDown$
       .switchMap(mouseDownEvent =>

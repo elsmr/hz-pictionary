@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startWatchingRoom, stopWatchingRoom } from '../../redux/actions';
+import { Notification, Button } from 'grommet';
+import { startWatchingRoom, stopWatchingRoom, logout, sendMessage, addParticipant } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
 import DrawableCanvas from '../../components/Canvas/DrawableCanvas';
 import Header from '../../components/Header';
@@ -10,10 +11,8 @@ import './Room.scss';
 class Room extends React.Component {
   constructor(props) {
     super(props);
-    const { startWatchingRoom, match: { params: { roomId } }, user } = props;
-    if (user.isAuthorized) {
-      startWatchingRoom(roomId);
-    }
+    const { startWatchingRoom, match: { params: { roomId } } } = props;
+    startWatchingRoom(roomId);
   }
 
   componentWillUnmount() {
@@ -22,18 +21,46 @@ class Room extends React.Component {
   }
 
   render() {
-    const { room, user } = this.props;
+    const { room, logout, user, sendMessage, addParticipant } = this.props;
+    const isParticipant = !!room.participants.find(p => p.id === user.id);
+    const isFull = room.config.maxPlayers <= room.participants.length;
 
     if (user.authPending) {
-      return <PageSpinner />;
+      return <PageSpinner size="huge" />;
     }
     return (
       <div className="app-wrapper">
         <div>
           <Header
             user={user}
+            onLogout={logout}
           />
         </div>
+        <div>
+          { !isParticipant && isFull &&
+            <Notification
+              status="warning"
+              message="The room is full 😢"
+            />
+          }
+        </div>
+        <div>
+          {
+            room.participants.map(p =>
+              <p>{p.name}</p>
+            )
+          }
+        </div>
+        { !isParticipant && !isFull &&
+          <div>
+            <Button
+              label="Join this room"
+              style={{ marginTop: '1em', width: '100%' }}
+              primary
+              onClick={() => addParticipant(user)}
+            />
+          </div>
+        }
         <div className="room__container">
           <DrawableCanvas
             enabled
@@ -41,8 +68,10 @@ class Room extends React.Component {
             settings={user.drawingSettings}
           />
           <Chat
+            user={user}
+            onMessage={message => sendMessage(message)}
             messages={room.chat}
-            enabled={!!room.participants.find(p => p.id === user.id)}
+            enabled={isParticipant}
           />
         </div>
       </div>
@@ -52,4 +81,10 @@ class Room extends React.Component {
 
 const mapStateToProps = state => ({ room: state.room });
 
-export default connect(mapStateToProps, { startWatchingRoom, stopWatchingRoom })(Room);
+export default connect(mapStateToProps, {
+  startWatchingRoom,
+  stopWatchingRoom,
+  logout,
+  sendMessage,
+  addParticipant,
+})(Room);

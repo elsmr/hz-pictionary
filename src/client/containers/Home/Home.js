@@ -7,7 +7,7 @@ import { createRoom, logout } from '../../redux/actions';
 import './Home.scss';
 
 const Home = ({ user, createRoom, logout }) => (
-  <div className="app-wrapper">
+  <div className="home-wrapper">
     <Header isHome user={user} onLogout={logout} />
     <main className="main-content">
       <Heading className="title" margin="large">hzPictionary</Heading>
@@ -18,7 +18,7 @@ const Home = ({ user, createRoom, logout }) => (
     </main>
     { !user.isAuthorized && !user.authPending &&
       <Notification
-        status="disabled"
+        status="warning"
         message="You need to login or sign up to create a hzPictionary room!"
       />
     }
