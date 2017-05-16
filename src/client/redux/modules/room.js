@@ -53,10 +53,10 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.updateRoom:
-      return Object.assign({}, state, { ...action.room, loading: false });
     case actionTypes.clearRoom:
       return initialState;
+    case actionTypes.updateRoom:
+      return Object.assign({}, state, { ...action.room, loading: false });
     case actionTypes.updateRoomNotCanvas:
       return Object.assign({}, state, { ...action.room, loading: false, canvas: state.canvas });
     case actionTypes.updateCanvas:
@@ -64,7 +64,9 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.clearCanvas:
       return Object.assign({}, state, { canvas: { data: [] } });
     case actionTypes.addParticipant:
-      return Object.assign({}, state, { participants: [...state.participants, action.user] });
+      return Object.assign({}, state, {
+        participants: [...state.participants, { ...action.user, score: 0 }],
+      });
     default:
       return state;
   }
@@ -81,7 +83,7 @@ export const createRoomEpic = action$ =>
             drawingPlayer: action.user,
           },
           participants: [
-            Object.assign({}, action.user, { color: PLAYER_COLORS[0] }),
+            Object.assign({}, action.user, { color: PLAYER_COLORS[0], score: 0 }),
           ],
         })
       ))

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Heading, Notification } from 'grommet';
 import RoomForm from './RoomForm';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import { createRoom, logout } from '../../redux/actions';
 import './Home.scss';
 

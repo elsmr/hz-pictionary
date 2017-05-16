@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Notification, Button } from 'grommet';
-import { startWatchingRoom, stopWatchingRoom, logout, sendMessage, addParticipant } from '../../redux/actions';
+import { startWatchingRoom, stopWatchingRoom, logout, sendMessage, addParticipant, clearRoom } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
 import DrawableCanvas from '../../components/Canvas/DrawableCanvas';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import Chat from '../../components/Chat/Chat';
+import PlayerBadge from '../../components/PlayerBadge/PlayerBadge';
 import './Room.scss';
 
 class Room extends React.Component {
@@ -16,7 +17,8 @@ class Room extends React.Component {
   }
 
   componentWillUnmount() {
-    const { stopWatchingRoom, match: { params: { roomId } } } = this.props;
+    const { stopWatchingRoom, clearRoom, match: { params: { roomId } } } = this.props;
+    clearRoom();
     stopWatchingRoom(roomId);
   }
 
@@ -46,8 +48,11 @@ class Room extends React.Component {
         </div>
         <div>
           {
-            room.participants.map(p =>
-              <p>{p.name}</p>
+            room.participants.map(player =>
+              <PlayerBadge
+                player={player}
+                won
+              />
             )
           }
         </div>
@@ -87,4 +92,5 @@ export default connect(mapStateToProps, {
   logout,
   sendMessage,
   addParticipant,
+  clearRoom,
 })(Room);

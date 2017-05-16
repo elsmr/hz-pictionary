@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Heading } from 'grommet';
 import GithubIcon from 'grommet/components/icons/base/SocialGithub';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import { hz } from '../../lib/horizon';
 import { AUTH_PROVIDERS } from '../../constants';
 import './Login.scss';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Headline } from 'grommet';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import { logout, setUsername } from '../../redux/actions';
 import ProfileForm from './ProfileForm';
 
