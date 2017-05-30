@@ -1,65 +1,73 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button, TextInput } from 'grommet';
 import slug from 'slug';
-import { setRoomFormName, setRoomFormState } from '../../redux/actions';
+import { setRoomFormName, setRoomFormState, clearRoomForm } from '../../redux/actions';
 import { FORM_STATES } from '../../constants';
 import FormStateIcon from '../../components/FormStateIcon';
 import { required } from '../../lib/validators';
 
-const isValid = required;
-
-const handleChange = (dispatchName, dispatchState, state, value) => {
-  if (state !== FORM_STATES.PRISTINE) {
-    dispatchState(FORM_STATES.PRISTINE);
+class RoomForm extends React.Component {
+  componentWillUnmount() {
+    this.props.clearRoomForm();
   }
-  if (isValid(value)) {
-    dispatchName(slug(value));
-  }
-};
 
-const handleSubmit = (action, value, formState) => {
-  if (isValid(value) && formState === FORM_STATES.VALID) {
-    action(value);
+  handleChange(name) {
+    const { setRoomFormName, setRoomFormState, roomForm: { formState } } = this.props;
+    if (formState !== FORM_STATES.PRISTINE) {
+      setRoomFormState(FORM_STATES.PRISTINE);
+    }
+    if (required(name)) {
+      setRoomFormName(slug(name));
+    }
   }
-};
 
-const RoomForm = ({
-  setRoomFormName,
-  setRoomFormState,
-  onSubmit,
-  roomForm: { name, formState },
-}) => (
-  <form className="form" action="">
-    <TextInput
-      className="form__input"
-      onDOMChange={e =>
-        handleChange(
-          setRoomFormName,
-          setRoomFormState,
-          formState,
-          e.target.value.toLowerCase()
-        )
-      }
-      disabled={formState === FORM_STATES.LOCKED}
-    />
-    <span className="form__state">
-      <FormStateIcon state={formState} />
-    </span>
-    <Button
-      className="form__button"
-      label="Create room"
-      onClick={(e) => {
-        e.preventDefault();
-        handleSubmit(onSubmit, name, formState);
-      }}
-      disabled={formState === FORM_STATES.LOCKED || !isValid(name)}
-      primary
-      type="submit"
-    />
-  </form>
-);
+  handleSubmit() {
+    const { onSubmit, roomForm: { name, formState } } = this.props;
+    if (required(name) && formState === FORM_STATES.VALID) {
+      onSubmit(name);
+    }
+  }
+
+  render() {
+    const { roomForm: { name, formState } } = this.props;
+    return (
+      <div className="room-form">
+        <form className="form" action="">
+          <TextInput
+            className="form__input"
+            onDOMChange={e => this.handleChange(e.target.value.toLowerCase())}
+            disabled={formState === FORM_STATES.LOCKED}
+          />
+          <span className="form__state">
+            <FormStateIcon state={formState} />
+          </span>
+          <Button
+            className="form__button"
+            label="Create room"
+            onClick={(e) => {
+              e.preventDefault();
+              this.handleSubmit();
+            }}
+            disabled={formState === FORM_STATES.LOCKED || !required(name)}
+            primary
+            type="submit"
+          />
+        </form>
+        {formState === FORM_STATES.INVALID &&
+          <Link
+            to={`/rooms/${name}`}
+            className="brand-link"
+          >
+            go to room &quot;{name}&quot;
+      </Link>
+        }
+      </div>
+    );
+  }
+}
 
 RoomForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
@@ -67,4 +75,8 @@ RoomForm.propTypes = {
 
 const mapStateToProps = state => ({ roomForm: state.roomForm });
 
-export default connect(mapStateToProps, { setRoomFormName, setRoomFormState })(RoomForm);
+export default connect(mapStateToProps, {
+  setRoomFormName,
+  setRoomFormState,
+  clearRoomForm,
+})(RoomForm);
