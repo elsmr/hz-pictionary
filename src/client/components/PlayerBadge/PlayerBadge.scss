@@ -1,0 +1,56 @@
+@import '../../scss/_variables';
+
+.player__badge {
+  width: 10em;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid $brand-color;
+  border-radius: 2em;
+  color: #fff;
+  overflow: hidden;
+}
+
+.player__badge.won {
+  width: 12em;
+  border-color: gold;
+  color: #000;
+  .player__badge__name {
+    width: 8em;
+    border-color: gold;
+    background-color: gold;
+    padding: 0.2em 0.5em;
+  }
+  .player__badge__score {
+    color: #000;
+  }
+}
+
+.player__badge__name {
+  width: 6em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: $brand-color;
+  border: 2px solid $brand-color;
+  padding: 0.5em;
+}
+
+.player__badge__score {
+  padding: 0.5em;
+  color: $brand-color;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.player__badge__container {
+  position: relative;
+}
+
+.crown {
+  left: -30%;
+  top: -210%;
+  transform: scale(0.2, 0.2);
+  position: absolute;
+}
