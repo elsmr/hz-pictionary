@@ -48,6 +48,14 @@ module.exports = {
 }
 ```
 
+### Apply horizon.io schema
+
+This command will create the necessary tables and indexes.
+
+```shell
+hz schema apply --project-name hz_pictionary .hz/schema.toml
+```
+
 ## Run app locally
 
 ```shell
