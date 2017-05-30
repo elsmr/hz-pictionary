@@ -5,7 +5,6 @@ const path = require('path');
 const https = require('https');
 const cors = require('cors');
 const secrets = require('../../config/secrets');
-const auth = require('../../config/auth');
 const roomRoutes = require('./routes/rooms');
 const authRoutes = require('./routes/auth');
 const session = require('express-session');
@@ -53,8 +52,8 @@ app.get('*', (req, res) => {
 const hzServer = horizon(httpsServer, hzOptions);
 hzServer.add_auth_provider(horizon.auth.github, {
   path: 'github',
-  id: auth.github.id,
-  secret: auth.github.secret,
+  id: secrets.github.id,
+  secret: secrets.github.secret,
 });
 
 hzServer._reql_conn.ready().then((conn) => {
