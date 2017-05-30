@@ -14,13 +14,16 @@ import { hzRooms } from '../../lib/horizon';
 import {
   actionTypes,
   updateRoom,
-  clearRoomForm,
   updateRoomNotCanvas,
   updateCanvas,
   noOp,
+  showToast,
+  receiveWord,
+  pauseGame,
   // clearCanvas,
 } from '../actions';
 import { mouseEventStream } from '../../lib/canvas';
+import { getRandomWord } from '../../lib/api';
 import { PLAYER_COLORS } from '../../constants';
 
 const initialState = {
@@ -44,9 +47,14 @@ const initialState = {
     },
   ],
   game: {
+    currentWord: null,
+    winner: {
+      id: null,
+    },
     drawingPlayer: {
-      id: '',
+      id: null,
       index: 0,
+      name: null,
     },
   },
 };
@@ -56,9 +64,9 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.clearRoom:
       return initialState;
     case actionTypes.updateRoom:
-      return Object.assign({}, state, { ...action.room, loading: false });
+      return Object.assign({}, state, action.room, { loading: false });
     case actionTypes.updateRoomNotCanvas:
-      return Object.assign({}, state, { ...action.room, loading: false, canvas: state.canvas });
+      return Object.assign({}, state, action.room, { loading: false, canvas: state.canvas });
     case actionTypes.updateCanvas:
       return Object.assign({}, state, { canvas: { data: [...state.canvas.data, action.data] } });
     case actionTypes.clearCanvas:
@@ -67,6 +75,12 @@ export const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         participants: [...state.participants, { ...action.user, score: 0 }],
       });
+    case actionTypes.startGame:
+      return Object.assign({}, state, { started: true });
+    case actionTypes.pauseGame:
+      return Object.assign({}, state, { started: false });
+    case actionTypes.receiveWord:
+      return Object.assign({}, state, { game: { currentWord: action.word } });
     default:
       return state;
   }
@@ -80,6 +94,7 @@ export const createRoomEpic = action$ =>
           name: action.name,
           creator: action.user,
           game: {
+            ...initialState.game,
             drawingPlayer: action.user,
           },
           participants: [
@@ -87,12 +102,7 @@ export const createRoomEpic = action$ =>
           ],
         })
       ))
-    .mergeMap(action =>
-      Observable.concat(
-        Observable.of(clearRoomForm()),
-        Observable.of(push(`/rooms/${action.name}`))
-      )
-    );
+    .mergeMap(action => Observable.of(push(`/rooms/${action.name}`)));
 
 export const watchRoomEpic = (action$, store) =>
   action$.ofType(actionTypes.startWatchingRoom)
@@ -115,6 +125,18 @@ export const watchRoomEpic = (action$, store) =>
           return updateRoom(room);
         })
         .takeUntil(action$.ofType(actionTypes.stopWatchingRoom))
+    );
+
+export const startGameEpic = action$ =>
+  action$.ofType(actionTypes.startGame)
+    .mergeMap(() => getRandomWord()
+        .map(res => receiveWord(res.word))
+        .catch(() =>
+          Observable.concat(
+            Observable.of(showToast('critical', 'Cannot start the game. Please check you connection and try again.')),
+            Observable.of(pauseGame())
+          )
+        )
     );
 
 export const watchCanvasEpic = action$ =>

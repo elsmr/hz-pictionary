@@ -38,6 +38,9 @@ export const actionTypes = {
   clearRoom: 'CLEAR_ROOM',
   sendMessage: 'SEND_MESSAGE',
   addParticipant: 'ADD_PARTICIPANT',
+  startGame: 'START_GAME',
+  pauseGame: 'PAUSE_GAME',
+  receiveWord: 'RECEIVE_WORD',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -46,15 +49,12 @@ export const setRoomFormName = name => ({ type: actionTypes.setRoomFormName, nam
 export const setRoomFormState = state => ({ type: actionTypes.setRoomFormState, state });
 export const clearRoomForm = () => ({ type: actionTypes.clearRoomForm });
 export const clearProfileForm = () => ({ type: actionTypes.clearProfileForm });
-
 export const setUsername = name => ({ type: actionTypes.setUsername, name });
 export const setUsernameFulfilled = () => ({ type: actionTypes.setUsernameFulfilled });
 export const setUsernameRejected = () => ({ type: actionTypes.setUsernameRejected });
-
 export const createRoom = (name, user) => ({ type: actionTypes.createRoom, name, user });
 export const createRoomFulfilled = () => ({ type: actionTypes.createRoomFulfilled });
 export const createRoomRejected = () => ({ type: actionTypes.createRoomRejected });
-
 export const fetchRoomNameValidity = () => ({ type: actionTypes.fetchRoomNameValidity });
 export const fetchRoomNameValidityFulfilled = isValid => ({
   type: actionTypes.fetchRoomNameValidityFullfilled,
@@ -64,7 +64,6 @@ export const fetchRoomNameValidityRejected = error => ({
   type: actionTypes.fetchRoomNameValidityRejected,
   error,
 });
-
 export const fetchUsernameValidity = () => ({ type: actionTypes.fetchUsernameValidity });
 export const fetchUsernameValidityFulfilled = isValid => ({
   type: actionTypes.fetchUsernameValidityFullfilled,
@@ -74,7 +73,6 @@ export const fetchUsernameValidityRejected = error => ({
   type: actionTypes.fetchUsernameValidityRejected,
   error,
 });
-
 export const fetchUserAuth = () => ({ type: actionTypes.fetchUserAuth });
 export const fetchUserAuthFulfilled = user => ({
   type: actionTypes.fetchUserAuthFulfilled,
@@ -84,28 +82,25 @@ export const fetchUserAuthRejected = error => ({
   type: actionTypes.fetchUserAuthRejected,
   error,
 });
-
 export const startWatchingRoom = name => ({ type: actionTypes.startWatchingRoom, name });
 export const stopWatchingRoom = name => ({ type: actionTypes.stopWatchingRoom, name });
 export const watchingRoomRejected = error => ({ type: actionTypes.watchingRoomRejected, error });
-
 export const startWatchingCanvas = canvas => ({ type: actionTypes.startWatchingCanvas, canvas });
 export const stopWatchingCanvas = canvas => ({ type: actionTypes.stopWatchingCanvas, canvas });
-
 export const logout = () => ({ type: actionTypes.logout });
 export const updateRoom = room => ({ type: actionTypes.updateRoom, room });
 export const clearRoom = () => ({ type: actionTypes.clearRoom });
 export const updateRoomNotCanvas = room => ({ type: actionTypes.updateRoomNotCanvas, room });
 export const showToast = (status, message) => ({ type: actionTypes.showToast, status, message });
 export const destroyToast = () => ({ type: actionTypes.destroyToast });
-
 export const initializeApp = () => ({ type: actionTypes.initializeApp });
-
 export const updateCanvas = data => ({ type: actionTypes.updateCanvas, data });
 export const clearCanvas = () => ({ type: actionTypes.clearCanvas });
 export const noOp = () => ({ type: actionTypes.noOp });
-
 export const setDrawingSettings = settings => ({ type: actionTypes.setDrawingSettings, settings });
-
 export const sendMessage = message => ({ type: actionTypes.sendMessage, message });
 export const addParticipant = user => ({ type: actionTypes.addParticipant, user });
+export const startGame = () => ({ type: actionTypes.startGame });
+export const pauseGame = () => ({ type: actionTypes.pauseGame });
+export const receiveWord = word => ({ type: actionTypes.receiveWord, word });
+

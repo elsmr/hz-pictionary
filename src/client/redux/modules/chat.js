@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/debounceTime';
-import { actionTypes, noOp } from '../actions';
+import { actionTypes, noOp, showToast } from '../actions';
 import { hzRooms } from '../../lib/horizon';
 
 export const x = 2;
@@ -13,5 +13,5 @@ export const sendMessageEpic = (action$, store) =>
       const newRoom = Object.assign({}, room, { chat: [...room.chat, action.message] });
       return hzRooms.update(newRoom)
         .mapTo(noOp())
-        .catch(err => console.warn(err));
+        .catch(() => showToast('critical', 'Cannot send your message. Please check you connection and try again.'));
     });
