@@ -12,6 +12,7 @@
   },
   "extends": "airbnb",
   "rules": {
+    "react/jsx-wrap-multilines": 0,
     "react/jsx-filename-extension": 0,
     "no-underscore-dangle": 0,
     "comma-dangle": ["error", {
