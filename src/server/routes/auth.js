@@ -1,7 +1,7 @@
 const express = require('express');
 const authService = require('../services/auth');
 const simpleOAuth = require('simple-oauth2');
-const providers = require('../../../config/auth');
+const providers = require('../../../config/secrets');
 const crypto = require('crypto');
 const base64url = require('base64url');
 require('isomorphic-fetch');

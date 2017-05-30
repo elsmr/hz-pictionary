@@ -7,6 +7,7 @@ const cors = require('cors');
 const secrets = require('../../config/secrets');
 const roomRoutes = require('./routes/rooms');
 const authRoutes = require('./routes/auth');
+const wordRoutes = require('./routes/words');
 const session = require('express-session');
 
 const PROJECT_NAME = 'hz_pictionary';
@@ -43,7 +44,8 @@ app.use(session({
 
 const httpsServer = https.createServer(httpsOptions, app);
 app.use('/api/rooms', roomRoutes);
-app.use('/auth/', authRoutes);
+app.use('/auth', authRoutes);
+app.use('/api/words', wordRoutes);
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/index.html'));
