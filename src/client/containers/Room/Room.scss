@@ -8,9 +8,8 @@
 }
 
 .chat__container {
-    height: 100%;
-    max-height: 30em;
-  }
+  height: 30em;
+}
 
 .row {
   margin: 0.5em 0;
@@ -28,6 +27,15 @@
   flex-flow: row wrap;
 }
 
+.actions {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  * + * {
+    margin-left: 0.5em;
+  }
+}
+
 .player__badge__container + .player__badge__container {
   margin-left: 1em;
 }
@@ -37,6 +45,6 @@
     flex-direction: row;
   }
   .chat__container {
-    max-height: 40em;
+    height: 40em;
   }
 }
