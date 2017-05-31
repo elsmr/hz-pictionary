@@ -1,11 +1,11 @@
 import React from 'react';
 import './TurnIndicator.scss';
 
-const TurnIndicator = ({ user, drawingPlayer, word }) => (
+const TurnIndicator = ({ user, drawingPlayer }) => (
   <div className="turn-indicator">
     { drawingPlayer.id === user.id
-      ? `Your turn! draw "${word}"`
-      : `${drawingPlayer.name} is drawing! Make a guess`
+      ? 'Your turn!'
+      : `${drawingPlayer.name}'s turn`
     }
   </div>
 );
