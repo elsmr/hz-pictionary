@@ -5,6 +5,7 @@ import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/sampleTime';
 import 'rxjs/add/operator/delay';
@@ -29,16 +30,21 @@ import {
   showCanvasMessage,
   destroyCanvasMessage,
   nextRound,
+  setNextRound,
+  pauseTimer,
+  completeGame,
 } from '../actions';
 import { mouseEventStream } from '../../lib/canvas';
 import { getRandomWord } from '../../lib/api';
-import { PLAYER_COLORS } from '../../constants';
+import { PLAYER_COLORS, ROUND_MAX_TIME } from '../../constants';
 
 const initialState = {
-  timer: 60,
+  round: 0,
+  timer: ROUND_MAX_TIME,
   loading: true,
   started: false,
   paused: false,
+  completed: false,
   name: '',
   canvas: {
     data: [],
@@ -81,6 +87,8 @@ export const reducer = (state = initialState, action) => {
       return Object.assign({}, state, action.room, { loading: false });
     case actionTypes.updateRoomNotCanvas:
       return Object.assign({}, state, action.room, { loading: false, canvas: state.canvas });
+    case actionTypes.undoLine:
+      return Object.assign({}, state, { canvas: { data: state.canvas.data.slice(0, -5) } });
     case actionTypes.updateCanvas:
       return Object.assign({}, state, { canvas: { data: [...state.canvas.data, action.data] } });
     case actionTypes.clearCanvas:
@@ -90,11 +98,29 @@ export const reducer = (state = initialState, action) => {
         participants: [...state.participants, { ...action.user, score: 0 }],
       });
     case actionTypes.startGame:
-      return Object.assign({}, state, { started: true });
+      return Object.assign({}, state, { started: true, paused: false });
+    case actionTypes.restartGame:
+      return Object.assign({}, state, initialState, {
+        name: state.name,
+        id: state.id,
+        game: {
+          ...initialState.game,
+          drawingPlayer: Object.assign({}, initialState.game.drawingPlayer, state.creator),
+        },
+        participants: [
+          Object.assign({}, state.creator, { color: PLAYER_COLORS[0], score: 0 }),
+        ],
+      });
     case actionTypes.pauseGame:
       return Object.assign({}, state, { paused: true });
     case actionTypes.resumeGame:
       return Object.assign({}, state, { paused: false });
+    case actionTypes.completeGame:
+      return Object.assign({}, state, {
+        completed: true,
+        started: false,
+        game: { ...state.game, winner: action.winner },
+      });
     case actionTypes.receiveWord:
       return Object.assign({}, state, { game: { ...state.game, currentWord: action.word } });
     case actionTypes.tick:
@@ -110,10 +136,16 @@ export const reducer = (state = initialState, action) => {
       newParticipants[state.game.drawingPlayer.index].score -= 1;
       return Object.assign({}, state, { participants: newParticipants });
     }
+    case actionTypes.winRound: {
+      const newParticipants = state.participants;
+      newParticipants[newParticipants.findIndex(p => p.id === action.userId)].score += 1;
+      return Object.assign({}, state, { participants: newParticipants });
+    }
     case actionTypes.nextRound: {
       const oldIndex = state.game.drawingPlayer.index;
       const newIndex = oldIndex < state.participants.length - 1 ? oldIndex + 1 : 0;
       return Object.assign({}, state, {
+        round: state.round + 1,
         timer: initialState.timer,
         game: {
           ...state.game,
@@ -125,6 +157,8 @@ export const reducer = (state = initialState, action) => {
         },
       });
     }
+    case actionTypes.setNextRound:
+      return Object.assign({}, state, { round: state.round + 1 });
     default:
       return state;
   }
@@ -153,7 +187,8 @@ export const countDownEpic = (action$, store) =>
     action$.ofType(actionTypes.resumeGame),
     action$.ofType(actionTypes.startCountdown)
   )
-    .mergeMap(() =>
+    .filter(() => store.getState().room.creator.id === store.getState().user.id)
+    .switchMap(() =>
       Observable.interval(1000)
         .map(() => {
           if (store.getState().room.timer > 0) {
@@ -165,7 +200,10 @@ export const countDownEpic = (action$, store) =>
           Observable.merge(
             action$.ofType(actionTypes.pauseGame),
             action$.ofType(actionTypes.loseRound),
-            action$.ofType(actionTypes.winRound)
+            action$.ofType(actionTypes.winRound),
+            action$.ofType(actionTypes.stopWatchingRoom),
+            action$.ofType(actionTypes.pauseTimer),
+            action$.ofType(actionTypes.completeGame)
           )
         )
     );
@@ -174,18 +212,41 @@ export const loseRoundEpic = (action$, store) =>
   action$.ofType(actionTypes.loseRound)
     .mergeMap(() => {
       const roomState = store.getState().room;
-      return Observable.concat(
-        Observable.of(showCanvasMessage(`"${roomState.game.currentWord}" was not guessed in time. Next round will start in a few seconds`)),
-        Observable.of(nextRound(), clearCanvas(), destroyCanvasMessage()).delay(5000)
-      );
-    }
-    );
+      return Observable.of(setNextRound(), showCanvasMessage(`"${roomState.game.currentWord}" was not guessed in time. Next round will start in a few seconds`));
+    });
 
-export const winRoundEpic = action$ =>
-  action$.ofType(actionTypes.winRound);
+export const winRoundEpic = (action$, store) =>
+  action$.ofType(actionTypes.winRound)
+    .mergeMap((action) => {
+      const room = store.getState().room;
+      const word = room.game.currentWord;
+      const guesser = room.participants.find(p => p.id === action.userId);
+      if (!guesser) {
+        return Observable.throw('Not able to indentify the person who guessed the word');
+      }
 
-export const gameCompletedEpic = action$ =>
-  action$.ofType(actionTypes.completeGame);
+      return Observable.of(setNextRound(), showCanvasMessage(`${guesser.name} has guessed "${word}" correctly!`));
+    })
+    .catch(err => showToast('critical', err));
+
+export const nextRoundEpic = (action$, store) =>
+  action$.ofType(actionTypes.setNextRound)
+    .filter(() => store.getState().user.id === store.getState().room.creator.id)
+    .mergeMap(() => {
+      const room = store.getState().room;
+      const winningScore = room.config.winningScore;
+      const winningParticipant = room.participants.reduce((acc, p) => {
+        if (p.score > acc.score) {
+          return p;
+        }
+        return acc;
+      }, { score: 0 });
+
+      if (winningScore <= winningParticipant.score) {
+        return Observable.of(completeGame(winningParticipant));
+      }
+      return Observable.of(nextRound(), clearCanvas(), destroyCanvasMessage()).delay(5000);
+    });
 
 export const watchRoomEpic = (action$, store) =>
   action$.ofType(actionTypes.startWatchingRoom)
@@ -196,18 +257,44 @@ export const watchRoomEpic = (action$, store) =>
       )
         .defaultIfEmpty()
         .sampleTime(100)
-        .map((room) => {
+        .mergeMap((room) => {
+          const actions = [];
           if (!room) {
-            return push('/');
-          } else if (room.canvas) {
-            const { user, room: stateRoom } = store.getState();
-            if (user.id === room.game.drawingPlayer.id
-              && stateRoom.canvas.data.length > 0
-              && room.canvas.data.length !== 0) {
-              return updateRoomNotCanvas(room);
-            }
+            return Observable.of(push('/'));
           }
-          return updateRoom(room);
+
+          const { user, room: stateRoom } = store.getState();
+          if (user.id === room.game.drawingPlayer.id
+            && stateRoom.canvas.data.length > 0
+            && room.canvas.data.length !== 0) {
+            actions.push(Observable.of(updateRoomNotCanvas(room)));
+          } else {
+            actions.push(Observable.of(updateRoom(room)));
+          }
+
+          if (user.id === room.creator.id && !room.completed && room.round !== stateRoom.round) {
+            const winningScore = room.config.winningScore;
+            const winningParticipant = room.participants.reduce((acc, p) => {
+              if (p.score > acc.score) {
+                return p;
+              }
+              return acc;
+            }, { score: 0 });
+
+            if (winningScore <= winningParticipant.score) {
+              return Observable.of(updateRoom(room), completeGame(winningParticipant));
+            }
+
+            actions.push(
+              Observable.of(pauseTimer()),
+              Observable.of(
+                nextRound(),
+                clearCanvas(),
+                destroyCanvasMessage()
+              ).delay(5000)
+            );
+          }
+          return Observable.concat(...actions);
         })
         .takeUntil(action$.ofType(actionTypes.stopWatchingRoom))
     );
@@ -250,8 +337,12 @@ export const storeRoomEpic = (action$, store) =>
     action$.ofType(actionTypes.updateChat),
     action$.ofType(actionTypes.receiveWord),
     action$.ofType(actionTypes.clearCanvas),
+    action$.ofType(actionTypes.undoLine),
     action$.ofType(actionTypes.showCanvasMessage),
-    action$.ofType(actionTypes.destroyCanvasMessage)
+    action$.ofType(actionTypes.destroyCanvasMessage),
+    action$.ofType(actionTypes.setNextRound),
+    action$.ofType(actionTypes.completeGame),
+    action$.ofType(actionTypes.restartGame)
   )
     .mergeMap(() => hzRooms.update(store.getState().room))
     .mapTo(noOp())

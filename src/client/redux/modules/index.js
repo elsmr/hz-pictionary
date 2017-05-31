@@ -10,9 +10,9 @@ import {
   watchCanvasEpic,
   startGameEpic,
   countDownEpic,
-  gameCompletedEpic,
   loseRoundEpic,
   winRoundEpic,
+  nextRoundEpic,
 } from './room';
 import { reducer as roomForm, updateRoomFormEpic } from './roomForm';
 import { reducer as profileForm, updateProfileFormEpic } from './profileForm';
@@ -32,9 +32,9 @@ export const rootEpic = combineEpics(
   sendMessageEpic,
   startGameEpic,
   countDownEpic,
-  gameCompletedEpic,
   loseRoundEpic,
-  winRoundEpic
+  winRoundEpic,
+  nextRoundEpic
 );
 
 export const rootReducer = combineReducers({
