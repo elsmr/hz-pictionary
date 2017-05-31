@@ -5,7 +5,7 @@ import { Notification, Button, Headline, TextInput } from 'grommet';
 import PlayIcon from 'grommet/components/icons/base/Play';
 import PauseIcon from 'grommet/components/icons/base/Pause';
 import SettingsIcon from 'grommet/components/icons/base/SettingsOption';
-import { startWatchingRoom, stopWatchingRoom, logout, sendMessage, addParticipant, clearRoom, startGame, pauseGame, resumeGame } from '../../redux/actions';
+import { startWatchingRoom, stopWatchingRoom, logout, sendMessage, addParticipant, clearRoom, startGame, pauseGame, resumeGame, undoLine, clearCanvas, restartGame } from '../../redux/actions';
 import PageSpinner from '../../components/PageSpinner';
 import Canvas from '../../components/Canvas/Canvas';
 import Header from '../../components/Header/Header';
@@ -36,8 +36,11 @@ class Room extends React.Component {
       sendMessage,
       addParticipant,
       startGame,
+      restartGame,
       pauseGame,
       resumeGame,
+      undoLine,
+      clearCanvas,
     } = this.props;
     const isParticipant = !!room.participants.find(p => p.id === user.id);
     const isCreator = user.id === room.creator.id;
@@ -80,19 +83,29 @@ class Room extends React.Component {
             }
           </div>
           <div className="actions">
-            { isDrawingPlayer &&
+            { inProgress && isDrawingPlayer &&
               <Word word={room.game.currentWord} />
             }
             { inProgress &&
               <Timer seconds={room.timer} />
             }
-            {isCreator && !room.started && enoughPlayers &&
+            {isCreator && !room.started && !room.completed && enoughPlayers &&
               <div>
                 <Button
                   label="Start"
                   primary
                   icon={<PlayIcon />}
                   onClick={() => startGame()}
+                />
+              </div>
+            }
+            {isCreator && !room.started && room.completed && enoughPlayers &&
+              <div>
+                <Button
+                  label="Restart"
+                  primary
+                  icon={<PlayIcon />}
+                  onClick={() => restartGame()}
                 />
               </div>
             }
@@ -135,6 +148,8 @@ class Room extends React.Component {
               user={user}
               drawingPlayer={room.game.drawingPlayer}
               word={room.game.currentWord}
+              undoLine={undoLine}
+              clear={clearCanvas}
             />
             <Chat
               user={user}
@@ -174,6 +189,13 @@ class Room extends React.Component {
             { room.started ? 'The room owner has paused the game...' : 'Waiting for the room owner to start the game'} <span role="img" aria-label="sleepy">😴</span>
           </Headline>
         }
+        {room.completed &&
+          <div>
+            <Headline align="center">
+              {room.game.winner.name} has won the game! <span role="img" aria-label="crown">👑</span>
+            </Headline>
+          </div>
+        }
       </div>
     );
   }
@@ -189,6 +211,9 @@ export default connect(mapStateToProps, {
   addParticipant,
   clearRoom,
   startGame,
+  restartGame,
   pauseGame,
   resumeGame,
+  undoLine,
+  clearCanvas,
 })(Room);
