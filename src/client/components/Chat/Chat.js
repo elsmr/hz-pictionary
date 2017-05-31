@@ -5,25 +5,19 @@ import ChatMessage from './ChatMessage';
 import './Chat.scss';
 
 class Chat extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    return (
-      nextProps.messages.length !== this.props.messages.length ||
-      nextProps.enabled !== this.props.enabled
-    );
-  }
-
   componentDidUpdate() {
     this.container.scrollTop = this.container.scrollHeight;
   }
 
   handleSubmit(event) {
-    const { user, onMessage } = this.props;
     event.preventDefault();
+    const { user, onMessage } = this.props;
     onMessage({
       message: this.messageInput.componentRef.value,
       sender: user.name,
       date: Date.now(),
     });
+    this.messageInput.componentRef.value = '';
   }
 
   render() {
@@ -51,7 +45,7 @@ class Chat extends React.Component {
             <form className="chat__form" action="">
               <TextInput
                 ref={(input) => { this.messageInput = input; }}
-                placeHolder="Type a message..."
+                placeHolder="Make a guess..."
               />
               <Button
                 className="form__button"

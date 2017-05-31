@@ -48,3 +48,5 @@ export const DEFAULT_DRAWING_SETTINGS = {
   width: 10,
   color: '#000',
 };
+
+export const CHAT_MAX_LENGTH = 40;
