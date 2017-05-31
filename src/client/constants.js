@@ -50,3 +50,4 @@ export const DEFAULT_DRAWING_SETTINGS = {
 };
 
 export const CHAT_MAX_LENGTH = 40;
+export const ROUND_MAX_TIME = 30;
