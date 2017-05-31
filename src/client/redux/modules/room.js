@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/empty';
+import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
@@ -20,6 +21,9 @@ import {
   showToast,
   receiveWord,
   pauseGame,
+  tick,
+  loseRound,
+  startCountdown,
   // clearCanvas,
 } from '../actions';
 import { mouseEventStream } from '../../lib/canvas';
@@ -27,8 +31,10 @@ import { getRandomWord } from '../../lib/api';
 import { PLAYER_COLORS } from '../../constants';
 
 const initialState = {
+  timer: 60,
   loading: true,
   started: false,
+  paused: false,
   name: '',
   canvas: {
     data: [],
@@ -78,9 +84,15 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.startGame:
       return Object.assign({}, state, { started: true });
     case actionTypes.pauseGame:
-      return Object.assign({}, state, { started: false });
+      return Object.assign({}, state, { paused: true });
+    case actionTypes.resumeGame:
+      return Object.assign({}, state, { paused: false });
     case actionTypes.receiveWord:
-      return Object.assign({}, state, { game: { currentWord: action.word } });
+      return Object.assign({}, state, { game: { ...state.game, currentWord: action.word } });
+    case actionTypes.tick:
+      return Object.assign({}, state, { timer: state.timer - 1 });
+    case actionTypes.updateChat:
+      return Object.assign({}, state, { chat: action.chat });
     default:
       return state;
   }
@@ -104,6 +116,25 @@ export const createRoomEpic = action$ =>
       ))
     .mergeMap(action => Observable.of(push(`/rooms/${action.name}`)));
 
+export const countDownEpic = (action$, store) =>
+  action$.ofType(actionTypes.startCountdown)
+    .mergeMap(() =>
+      Observable.interval(1000)
+        .map(() => {
+          if (store.getState().room.timer > 0) {
+            return tick();
+          }
+          return loseRound();
+        })
+        .takeUntil(
+          Observable.merge(
+            action$.ofType(actionTypes.pauseTimer),
+            action$.ofType(actionTypes.loseRound),
+            action$.ofType(actionTypes.winRound)
+          )
+        )
+    );
+
 export const watchRoomEpic = (action$, store) =>
   action$.ofType(actionTypes.startWatchingRoom)
     .mergeMap(action =>
@@ -112,7 +143,7 @@ export const watchRoomEpic = (action$, store) =>
         Observable.empty()
       )
         .defaultIfEmpty()
-        .distinctUntilChanged()
+        .sampleTime(100)
         .map((room) => {
           if (!room) {
             return push('/');
@@ -130,7 +161,12 @@ export const watchRoomEpic = (action$, store) =>
 export const startGameEpic = action$ =>
   action$.ofType(actionTypes.startGame)
     .mergeMap(() => getRandomWord()
-        .map(res => receiveWord(res.word))
+        .mergeMap(res =>
+          Observable.concat(
+            Observable.of(receiveWord(res.word)),
+            Observable.of(startCountdown())
+          )
+        )
         .catch(() =>
           Observable.concat(
             Observable.of(showToast('critical', 'Cannot start the game. Please check you connection and try again.')),
@@ -150,10 +186,13 @@ export const watchCanvasEpic = action$ =>
 export const storeRoomEpic = (action$, store) =>
   Observable.merge(
     action$.ofType(actionTypes.updateCanvas).sampleTime(200),
-    action$.ofType(actionTypes.addParticipant)
+    action$.ofType(actionTypes.addParticipant),
+    action$.ofType(actionTypes.startGame),
+    action$.ofType(actionTypes.pauseGame),
+    action$.ofType(actionTypes.tick),
+    action$.ofType(actionTypes.updateChat),
+    action$.ofType(actionTypes.receiveWord)
   )
-    .do(() => {
-      const { room } = store.getState();
-      hzRooms.update(room);
-    })
-    .mapTo(noOp());
+    .mergeMap(() => hzRooms.update(store.getState().room))
+    .mapTo(noOp())
+    .catch(() => showToast('critical', 'Cannot send your message. Please check you connection and try again.'));
