@@ -1,0 +1,15 @@
+@import '../../scss/_variables';
+
+.canvas__container {
+  position: relative;
+  .turn-indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .button--download {
+    position: absolute;
+    right: 0;
+    bottom: 4px;
+  }
+}
