@@ -2,7 +2,18 @@ import { combineEpics } from 'redux-observable';
 import { combineReducers } from 'redux';
 import { reducer as app, initAppEpic } from './app';
 import { reducer as user, fetchUserAuthEpic, logoutEpic, setUsernameEpic } from './user';
-import { reducer as room, watchRoomEpic, createRoomEpic, storeRoomEpic, watchCanvasEpic, startGameEpic, countDownEpic } from './room';
+import {
+  reducer as room,
+  watchRoomEpic,
+  createRoomEpic,
+  storeRoomEpic,
+  watchCanvasEpic,
+  startGameEpic,
+  countDownEpic,
+  gameCompletedEpic,
+  loseRoundEpic,
+  winRoundEpic,
+} from './room';
 import { reducer as roomForm, updateRoomFormEpic } from './roomForm';
 import { reducer as profileForm, updateProfileFormEpic } from './profileForm';
 import { sendMessageEpic } from './chat';
@@ -20,7 +31,10 @@ export const rootEpic = combineEpics(
   watchCanvasEpic,
   sendMessageEpic,
   startGameEpic,
-  countDownEpic
+  countDownEpic,
+  gameCompletedEpic,
+  loseRoundEpic,
+  winRoundEpic
 );
 
 export const rootReducer = combineReducers({

@@ -44,10 +44,13 @@ export const actionTypes = {
   receiveWord: 'RECEIVE_WORD',
   updateChat: 'UPDATE_CHAT',
   startCountdown: 'START_COUNTDOWN',
-  pauseTimer: 'PAUSE_TIMER',
   loseRound: 'LOSE_ROUND',
   winRound: 'WIN_ROUND',
   tick: 'TICK',
+  showCanvasMessage: 'SHOW_CANVAS_MESSAGE',
+  destroyCanvasMessage: 'DESTROY_CANVAS_MESSAGE',
+  nextRound: 'NEXT_ROUND',
+  completeGame: 'COMPLETE_GAME',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -113,7 +116,10 @@ export const resumeGame = () => ({ type: actionTypes.resumeGame });
 export const receiveWord = word => ({ type: actionTypes.receiveWord, word });
 export const updateChat = chat => ({ type: actionTypes.updateChat, chat });
 export const startCountdown = () => ({ type: actionTypes.startCountdown });
-export const pauseTimer = () => ({ type: actionTypes.pauseTimer });
 export const loseRound = () => ({ type: actionTypes.loseRound });
 export const winRound = () => ({ type: actionTypes.winRound });
 export const tick = () => ({ type: actionTypes.tick });
+export const showCanvasMessage = message => ({ type: actionTypes.showCanvasMessage, message });
+export const destroyCanvasMessage = () => ({ type: actionTypes.destroyCanvasMessage });
+export const nextRound = () => ({ type: actionTypes.nextRound });
+export const completeGame = () => ({ type: actionTypes.completeGame });

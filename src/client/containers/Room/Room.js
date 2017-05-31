@@ -131,6 +131,7 @@ class Room extends React.Component {
               enabled={room.started && isDrawingPlayer}
               lines={room.canvas.data}
               settings={user.drawingSettings}
+              message={room.canvasMessage}
               user={user}
               drawingPlayer={room.game.drawingPlayer}
               word={room.game.currentWord}
