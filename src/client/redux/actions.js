@@ -39,8 +39,10 @@ export const actionTypes = {
   sendMessage: 'SEND_MESSAGE',
   addParticipant: 'ADD_PARTICIPANT',
   startGame: 'START_GAME',
+  restartGame: 'RESTART_GAME',
   resumeGame: 'RESUME_GAME',
   pauseGame: 'PAUSE_GAME',
+  pauseTimer: 'PAUSE_TIMER',
   receiveWord: 'RECEIVE_WORD',
   updateChat: 'UPDATE_CHAT',
   startCountdown: 'START_COUNTDOWN',
@@ -50,7 +52,9 @@ export const actionTypes = {
   showCanvasMessage: 'SHOW_CANVAS_MESSAGE',
   destroyCanvasMessage: 'DESTROY_CANVAS_MESSAGE',
   nextRound: 'NEXT_ROUND',
+  setNextRound: 'SET_NEXT_ROUND',
   completeGame: 'COMPLETE_GAME',
+  undoLine: 'UNDO_LINE',
 };
 
 export const setProfileFormUsername = name => ({ type: actionTypes.setProfileFormUsername, name });
@@ -111,15 +115,20 @@ export const setDrawingSettings = settings => ({ type: actionTypes.setDrawingSet
 export const sendMessage = message => ({ type: actionTypes.sendMessage, message });
 export const addParticipant = user => ({ type: actionTypes.addParticipant, user });
 export const startGame = () => ({ type: actionTypes.startGame });
+export const restartGame = () => ({ type: actionTypes.restartGame });
 export const pauseGame = () => ({ type: actionTypes.pauseGame });
 export const resumeGame = () => ({ type: actionTypes.resumeGame });
 export const receiveWord = word => ({ type: actionTypes.receiveWord, word });
 export const updateChat = chat => ({ type: actionTypes.updateChat, chat });
 export const startCountdown = () => ({ type: actionTypes.startCountdown });
 export const loseRound = () => ({ type: actionTypes.loseRound });
-export const winRound = () => ({ type: actionTypes.winRound });
+export const winRound = userId => ({ type: actionTypes.winRound, userId });
 export const tick = () => ({ type: actionTypes.tick });
 export const showCanvasMessage = message => ({ type: actionTypes.showCanvasMessage, message });
 export const destroyCanvasMessage = () => ({ type: actionTypes.destroyCanvasMessage });
 export const nextRound = () => ({ type: actionTypes.nextRound });
-export const completeGame = () => ({ type: actionTypes.completeGame });
+export const setNextRound = () => ({ type: actionTypes.setNextRound });
+export const completeGame = winner => ({ type: actionTypes.completeGame, winner });
+export const undoLine = () => ({ type: actionTypes.undoLine });
+export const pauseTimer = () => ({ type: actionTypes.pauseTimer });
+
