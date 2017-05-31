@@ -12,4 +12,17 @@
     right: 0;
     bottom: 4px;
   }
+  .canvas__message {
+    text-align: center;
+    padding: 0.5em;
+    font-size: 20px;
+    border-radius: 4px;
+    position: absolute;
+    background: $brand-color;
+    color: #fff;
+    width: 20em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

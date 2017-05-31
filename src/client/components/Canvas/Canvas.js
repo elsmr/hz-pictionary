@@ -13,7 +13,7 @@ class Canvas extends React.Component {
   }
 
   render() {
-    const { user, drawingPlayer, word, enabled, lines, settings } = this.props;
+    const { user, drawingPlayer, word, enabled, lines, settings, message } = this.props;
 
     return (
       <div className="canvas__container">
@@ -35,6 +35,11 @@ class Canvas extends React.Component {
           href="#"
           onClick={e => this.downloadCanvas(e.currentTarget)}
         />
+        { message &&
+          <div className="canvas__message">
+            {message}
+          </div>
+        }
       </div>
     );
   }
